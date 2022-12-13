@@ -1,20 +1,45 @@
 import Head from "next/head";
-import Layout, { siteTitle } from "../components/layout";
-import utilStyles from "../styles/utils.module.css";
+import Product from "../components/Product/Product";
 
-export default function Home() {
+export default function Home({ products }) {
+	console.log({ products });
 	return (
-		<Layout home>
+		<>
 			<Head>
-				<title>{siteTitle}</title>
+				<title>Store App</title>
 			</Head>
-			<section className={utilStyles.headingMd}>
-				<p>I am a professional frontend-developer</p>
-				<p>
-					(This is a sample website - you’ll be building a site like this on{" "}
-					<a href="https://nextjs.org/learn">our Next.js tutorial</a>.)
-				</p>
-			</section>
-		</Layout>
+			<div
+				style={{
+					width: "100%",
+					display: "flex",
+					justifyContent: "center",
+					flexDirection: "column",
+				}}
+			>
+				{products.map((product) => {
+					return (
+						<Product
+							id={product.id}
+							image={product.image}
+							title={product.title}
+							category={product.category}
+							description={product.description}
+							price={product.price}
+							key={product.id}
+						/>
+					);
+				})}
+			</div>
+		</>
 	);
+}
+
+export async function getStaticProps() {
+	const response = await fetch("https://fakestoreapi.com/products");
+	const products = await response.json();
+	return {
+		props: {
+			products,
+		},
+	};
 }
